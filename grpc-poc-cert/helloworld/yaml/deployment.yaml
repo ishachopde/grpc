@@ -1,0 +1,25 @@
+---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: grpc-poc-cert
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          service: grpc-poc-cert
+      template:
+        metadata:
+          labels:
+            service: grpc-poc-cert
+        spec:
+          containers:
+          - name: grpc-poc-cert
+            image: ichopde/grpc_example_hello 
+            ports:
+            - name: grpc-api
+              containerPort: 50052
+          restartPolicy: Always
+
+
+

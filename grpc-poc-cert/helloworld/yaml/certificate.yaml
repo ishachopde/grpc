@@ -1,0 +1,36 @@
+# ---
+#     apiVersion: cert-manager.io/v1alpha2
+#     kind: Certificate
+#     metadata:
+#       name: ambassador-certs
+#       # cert-manager will put the resulting Secret in the same Kubernetes 
+#       # namespace as the Certificate. You should create the certificate in 
+#       # whichever namespace you want to configure a Host.
+#       namespace: ambassador
+#     spec:
+#       secretName: ambassador-certs
+#       issuerRef:
+#         name: grpc-poc-cert
+#         kind: ClusterIssuer
+#       dnsNames:
+#       - grpcpocexample.com
+
+---
+    apiVersion: cert-manager.io/v1alpha2
+    kind: Certificate
+    metadata:
+      name: grpc-poc-cert-certificate
+      namespace: default
+    spec:
+      secretName: grpc-poc-cert-secret
+      issuerRef:
+        name: grpc-poc-cert-issuer
+        kind: ClusterIssuer
+      dnsNames:
+      - grpc-poc-cert.com
+    #   acme:
+    #     config:
+    #     - http01:
+    #         ingressClass: nginx
+    #       domains:
+    #       - grpc-poc-cert.com

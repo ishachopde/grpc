@@ -1,0 +1,22 @@
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: grpc-poc-cert
+      annotations:
+        getambassador.io/config: |
+          ---
+          apiVersion: ambassador/v1
+          kind: Mapping
+          name: grpc-poc-cert
+          prefix: /
+          service: grpc-poc-cert
+          host_rewrite: grpc-poc-cert
+    spec:
+      ports:
+        - port: 80
+          targetPort: 50052
+          name: http
+          protocol: TCP
+      selector:
+        app: grpc-poc-cert

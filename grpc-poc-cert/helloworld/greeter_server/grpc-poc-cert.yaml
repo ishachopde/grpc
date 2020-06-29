@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: grpc-poc-cert
+    labels:
+        service: grpc-poc-cert
+    annotations:
+        getambassador.io/config: |
+          ---
+          apiVersion: ambassador/v0
+          kind: Mapping
+          metadata:
+            name: grpc-poc-cert
+            spec:
+              grpc: True
+              prefix: /helloworld.Greeter/
+              rewrite: /helloworld.Greeter/
+              service: grpc-poc-cert
+        #   name: grpc-poc-cert-grpc-poc-cert
+        #   grpc: true
+        #   prefix: /helloworld.Greeter/
+        #   rewrite: /helloworld.Greeter/
+        #   service: grpc-poc-cert
+        #   ---
+        #   apiVersion: ambassador/v0
+        #   kind: Mapping
+        #   name: grpc-poc-cert-grpc-poc-cert-grpcreflect
+        #   grpc: true
+        #   prefix: /grpc.
+        #   rewrite: /grpc.
+        #   service: grpc-poc-cert
+spec:
+  type: ClusterIP
+  ports:
+  - name: grpc-poc-cert
+    port: 80
+    targetPort: grpc-api
+  selector:
+    service: grpc-poc-cert
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-poc-cert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: grpc-poc-cert
+  template:
+    metadata:
+      labels:
+        service: grpc-poc-cert
+    spec:
+      containers:
+      - name: grpc-poc-cert
+        image: grpc-demo/server
+        ports:
+        - name: grpc-api
+          containerPort: 50052
+      restartPolicy: Always
+# ---
+# apiVersion: getambassador.io/v2
+# kind: TLSContext
+#         metadata:
+#           name: tls
+#         spec:
+#           hosts:
+#           - "*"
+#           secret: ambassador-cert
+#           alpn_protocols: h2
